@@ -20,7 +20,7 @@ a search file util support different encoding ,such as GBK UTF-8
 <br>
 &ensp;  & &ensp;连接多个参数表示存在这些参数中的一个即匹配， 如 -k &haha&hehe 匹配包含 haha 或者包含 hehe 的文件<br>
 &ensp;  | &ensp;连接多个参数表示必须存在这些参数， 如 -k |haha|hehe 匹配同时含有haha和hehe的文件，同时出现'&'和'|'，以'|'为准<br>
-&ensp;  ^ &ensp;连接多个参数表示不允许存在的参数， 如 -k &haha&hehe^hoho 匹配包含 haha 或者包含 hehe 但不允许出现 hoho 的文件<br>
+&ensp;  ^ &ensp;连接多个参数表示不允许存在的参数， 如 -k &haha&hehe^hoho 匹配包含 haha 或者包含 hehe 但不允许出现 hoho 的文件，出现在-f参数后面如果为路径表示排除路径，为目录名则是排除所有这个名字的目录<br>
 <br>
 注意：<br>
 &ensp;  windows的console 中'&' '|' '^' 要用 '^&' '^|' '^^' 表示<br>
