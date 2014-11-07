@@ -28,19 +28,19 @@ a search file util support different encoding ,such as GBK UTF-8
   
 例子
 
-#在testFolder目录下搜索名字由字母组成并带字母后缀的文件
+在testFolder目录下搜索名字由字母组成并带字母后缀的文件
   java -jar MSearcher.jar -f C:\testFolder -n [a-zA-Z]+\.[a-zA-Z]+
 
-#在testFolder目录下搜索任何包含java（-i不区分大小写）字样的文件
+在testFolder目录下搜索任何包含java（-i不区分大小写）字样的文件
   java -jar MSearcher.jar -f C:\testFolder -k java -i
 
-#在testFolder目录下搜索任何包含'理工'字样的文件，只用GBK和GB2312两种编码方式读取文件内容
+在testFolder目录下搜索任何包含'理工'字样的文件，只用GBK和GB2312两种编码方式读取文件内容
   java -jar MSearcher.jar -f C:\testFolder -k 理工 -e GBK&GB2312
 
-#在testFolder目录下搜索包含'武汉理工大学'字样的文本（默认支持GBK和UTF8），并列出名字包含'武汉理工大学'字样的文件和目录（-s参数）
+在testFolder目录下搜索包含'武汉理工大学'字样的文本（默认支持GBK和UTF8），并列出名字包含'武汉理工大学'字样的文件和目录（-s参数）
   java -jar MSearcher.jar  -f C:\testFolder -n .*  -k 武汉理工大学 -s
 
-# 在C:\testFolder和C:\testFolder2两个目录下搜索 txt或者lua 格式的文件 ，包含关键字'武汉理工大学'或者包含'泰晤士报'，但不允许出现'空调字样'的文件
+ 在C:\testFolder和C:\testFolder2两个目录下搜索 txt或者lua 格式的文件 ，包含关键字'武汉理工大学'或者包含'泰晤士报'，但不允许出现'空调字样'的文件
   java -jar MSearcher.jar  -f C:\testFolder&C:\testFolder2 -n .*?\.txt&.*?\.lua  -k 武汉理工大学&泰晤士报^空调
   
 注意：
