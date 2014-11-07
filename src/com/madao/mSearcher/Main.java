@@ -96,7 +96,7 @@ public class Main {
          }
         Iterator<String> iterator = cf.getPathSplit().getAndItem().iterator();//get folders to search
 
-        while (iterator.hasNext()) {
+        while (iterator.hasNext()) {//search each folder connected with &
             File f;
             f=new File(iterator.next());
             if(f==null)break;
@@ -172,53 +172,74 @@ public class Main {
      * very important method
      * */
     private static void ergodic(File file,ConfigFile cf) {
+//param 'file' is a folder
+        boolean b;
+        Iterator<String> iterator;
 
-        Iterator<String> iterator=cf.getPathSplit().getNotItem().iterator();
-        boolean b=true;
-        while (iterator.hasNext())
-            b&=match(iterator.next(),file.getAbsolutePath());
-        //if the path is excluded ,return this ergodic
-        if (!b)return;
-
-        //'or' in folder is a reserve word,perhaps exclude the file but continue ergodic
+        if(cf.getPathSplit().getNotItem().size()!=0) {
+            iterator = cf.getPathSplit().getNotItem().iterator();
+            while (iterator.hasNext()) {
+                String not=iterator.next();
+                if(not.contains("\\")|not.contains("/"))
+                {
+                    if (match(not, file.getPath()))
+                        return;//if match the name shouldn't be appear, stop
+                }else {
+                    if (match(not, file.getName()))
+                        return;//if match the name shouldn't be appear, stop
+                }
+            }
+        }
 /*
-        iterator=cf.getPathSplit().getOrItem().iterator();
-        b=true;
-        while (iterator.hasNext())
-            b&=match(iterator.next(),file.getAbsolutePath());
+        if(cf.getPathSplit().getOrItem().size()!=0) {
+            iterator = cf.getPathSplit().getOrItem().iterator();
+            while (iterator.hasNext())
+                if (match(iterator.next(), file.getAbsolutePath()))// or limit in name means filename must be one of this limit
+                    b = true;
+        }
+        else b=true;
+        //judge folder name -f
+        if(!b)return;
 */
-
         File[] files = file.listFiles();
 
         if (files != null&&files.length>0) {
             for (File f : files) {
                 if(f.isFile()) {
-                    if (hasKeyWord(f.getName(), cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem()))
+                    if (hasKeyWord(f.getName(), cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem(),cf.getKeyWordSplit().getOrItem()))
                         outputFileNameList.add(f.getAbsolutePath());
 
-                    iterator = cf.getFileNameSplit().getAndItem().iterator();
                     b = false;// name is matcher?
 
                     //'not' is prior than 'and','or' is a reserve word
-                    while (iterator.hasNext()) {
-                        if (match(iterator.next(), f.getName())) {
-                            b = true;
-                            break;//if any matches
+                    if ( cf.getFileNameSplit().getAndItem().size()!=0) {
+                        iterator = cf.getFileNameSplit().getAndItem().iterator();
+                        while (iterator.hasNext()) {
+                            if (match(iterator.next(), f.getName())) {
+                                b = true;
+                                break;//if any matches
+                            }
                         }
                     }
+                    else b=true;
 
-                    iterator = cf.getFileNameSplit().getNotItem().iterator();
-                    while (iterator.hasNext()) {
-                        if (match(iterator.next(), f.getName())) {
-                            b = false;
-                            break;//if any matches
+                    if (cf.getFileNameSplit().getNotItem().size()!=0) {
+                        iterator = cf.getFileNameSplit().getNotItem().iterator();
+                        while (iterator.hasNext()) {
+                            if (match(iterator.next(), f.getName())) {
+                                b = false;
+                                break;//if any matches
+                            }
                         }
                     }
+                    //judge filename -n
+
+
                     if (b){
                         if (isBinary(f)&&keyword!="") continue;//ignore binary file if the
 
                         try {
-                            b = hasKeyWord(f, cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem());
+                            b = hasKeyWord(f, cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem(),cf.getKeyWordSplit().getOrItem());
                         } catch (Exception e) {
                             e.printStackTrace();
                             continue;//Unknown Exception?IO Exception?
@@ -229,7 +250,7 @@ public class Main {
                     }
                 }
                    else if(f.isDirectory()) {//some maybe neither file nor directory
-                        if (hasKeyWord(f.getName(), cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem()))
+                        if (hasKeyWord(f.getName(), cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem(),cf.getKeyWordSplit().getOrItem()))
                             outputFolderList.add(f.getAbsolutePath());
                         //if file name match the keyword,also record
                     String[] list=null;
@@ -259,6 +280,7 @@ public class Main {
     private static boolean match(String rule,String input){
         Pattern p = Pattern.compile(rule,cast);
         Matcher m = p.matcher(input);
+        if(rule.equals(input))return true;
         return m.matches();
     }
 
@@ -269,7 +291,7 @@ public class Main {
      * @param keyword keyword to search
      * @param ignoreWord if matches any of this word,the file is illegal
      */
-    private static boolean hasKeyWord (File f, ArrayList<String> keyword, ArrayList<String> ignoreWord) throws Exception {
+    private static boolean hasKeyWord (File f, ArrayList<String> keyword, ArrayList<String> ignoreWord,ArrayList<String> mustWord) throws Exception {
 
         if (ignoreWord.size() == 0&&keyword.size() == 0) return true;
 
@@ -296,10 +318,16 @@ public class Main {
                         }
                     }
                 }
+
                 //or array
-                int [] orArray=new int[1];//TODO
-
-
+                if (mustWord.size() != 0) {
+                    int[] orArray = new int[mustWord.size()];//calculate times default 0
+                    for (int i=0;i<mustWord.size();i++)
+                        if (contains(mustWord.get(i), line)) orArray[i]++;
+                    int num=1;
+                    for (int i=0;i<orArray.length;i++)num*=orArray[i];
+                        if (num==0)return false;//lack of any of word must appear
+                }
 
                 //and array
                 if (keyword.size() != 0) {
@@ -331,7 +359,7 @@ public class Main {
      * @param keyword keyword to search
      * @param ignoreWord if matches any of this word,the file is illegal
      */
-    private static boolean hasKeyWord (String f, ArrayList<String> keyword, ArrayList<String> ignoreWord){
+    private static boolean hasKeyWord (String f, ArrayList<String> keyword, ArrayList<String> ignoreWord,ArrayList<String> mustWord){
 
         if (ignoreWord.size() == 0&&keyword.size() == 0) return true;
 
@@ -343,13 +371,13 @@ public class Main {
                 }
             }
 
-        if(keyword.size()!=0) {
-            for (String e : keyword) {
-                if (contains(e, f)) {//match any key word
-                    return true;
+            if(keyword.size()!=0) {
+                for (String e : keyword) {
+                    if (contains(e, f)) {//match any key word
+                        return true;
+                    }
                 }
             }
-        }
 
         return false;
     }
