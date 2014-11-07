@@ -29,7 +29,6 @@ a search file util support different encoding ,such as GBK UTF-8
 关键词 -f -n -k 与 & | ^整合使用<br><br>
 -f 表示目录名<br>
     &ensp;-f C:\a\&C:\b\&ensp;&ensp;&ensp;                     表示在这两个文件夹下搜索<br>
-    &ensp;-f C:\a\&C:\b\|..理工&ensp;&ensp;&ensp;         表示在这两个文件夹下搜索，只搜索其中名为'XX理工'的文件夹<br>
     &ensp;-f C:\a\&C:\b\^..理工&ensp;&ensp;&ensp;         表示在这两个文件夹下搜索，跳过名为'XX理工'的文件夹<br><br>
 -n 表示文件名<br>
     &ensp;-n &.*?\.txt&.*?\.lua&ensp;&ensp;&ensp;            表示搜索文件后缀可以为txt或lua中的一个<br>
