@@ -3,9 +3,9 @@ MSearcher
 
 a search file util support different encoding ,such as GBK UTF-8
 <br><br>
-文件、目录搜索的小工具，可以制定多种编码方式来搜索文件<br>
-本科生，代码可能很不规范<br>
-因为windows下好像没有grep，win7默认的搜索用起来也不习惯，search my<br> file也不支持搜索中文，所以试着按自己想法写吧？算是娱乐。<br>
+文件、目录搜索的小工具，可以制定多种编码方式来搜索文件<br><br>
+本科生，代码可能很不规范<br><br>
+因为windows下好像没有grep，win7默认的搜索用起来也不习惯，search my file也不支持搜索中文，所以试着按自己想法写吧？算是娱乐。<br><br>
 <br>
 参数<br>
 <br>
@@ -20,7 +20,7 @@ a search file util support different encoding ,such as GBK UTF-8
 <br>
 &ensp;  & &ensp;连接多个参数表示存在这些参数中的一个即匹配， 如 -k &haha&hehe 匹配包含 haha 或者包含 hehe 的文件<br>
 &ensp;  | &ensp;连接多个参数表示必须存在这些参数， 如 -k |haha|hehe 匹配同时含有haha和hehe的文件，同时出现'&'和'|'，以'|'为准<br>
-&ensp;  ^ 连接多个参数表示不允许存在的参数， 如 -k &haha&hehe^hoho 匹配包含 haha 或者包含 hehe 但不允许出现 hoho 的文件<br>
+&ensp;  ^ &ensp;连接多个参数表示不允许存在的参数， 如 -k &haha&hehe^hoho 匹配包含 haha 或者包含 hehe 但不允许出现 hoho 的文件<br>
 <br>
 注意：<br>
 &ensp;  windows的console 中'&' '|' '^' 要用 '^&' '^|' '^^' 表示<br>
