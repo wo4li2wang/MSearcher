@@ -26,14 +26,14 @@ a search file util support different encoding ,such as GBK UTF-8
 &ensp;  windows的console 中'&' '|' '^' 要用 '^&' '^|' '^^' 表示<br>
 &ensp;  linux的terminal 中'&' '|' '^' 要用 '\&' '\|' '\^' 表示<br>
 <br><br>
-关键词 -f -n -k 与 & | ^整合使用<br>
+关键词 -f -n -k 与 & | ^整合使用<br><br>
 -f 表示目录名<br>
     &ensp;-f C:\a\&C:\b\&ensp;&ensp;&ensp;                     表示在这两个文件夹下搜索<br>
     &ensp;-f C:\a\&C:\b\|..理工&ensp;&ensp;&ensp;         表示在这两个文件夹下搜索，只搜索其中名为'XX理工'的文件夹<br>
-    &ensp;-f C:\a\&C:\b\^..理工&ensp;&ensp;&ensp;         表示在这两个文件夹下搜索，跳过名为'XX理工'的文件夹<br>
+    &ensp;-f C:\a\&C:\b\^..理工&ensp;&ensp;&ensp;         表示在这两个文件夹下搜索，跳过名为'XX理工'的文件夹<br><br>
 -n 表示文件名<br>
     &ensp;-n &.*?\.txt&.*?\.lua&ensp;&ensp;&ensp;            表示搜索文件后缀可以为txt或lua中的一个<br>
-    &ensp;-n ^.*?\.txt^.*?\.lua&ensp;&ensp;&ensp;            表示搜索文件后缀不能为txt或lua，同时出现&和^以 ^优先<br>
+    &ensp;-n ^.*?\.txt^.*?\.lua&ensp;&ensp;&ensp;            表示搜索文件后缀不能为txt或lua，同时出现&和^以 ^优先<br><br>
 -k 表示关键字<br>
     &ensp;-k &武汉&理工&ensp;&ensp;&ensp;                    表示搜索文件内容包含''武汉和'理工'的文件，出现任意一个关键词即可<br>
     &ensp;-k |武汉|理工&ensp;&ensp;&ensp;                        表示搜索必须包含''武汉和'理工'的文件，同时出现&和|以 |优先<br>
