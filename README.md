@@ -9,17 +9,17 @@ a search file util support different encoding ,such as GBK UTF-8
 <br>
 参数<br>
 <br>
-&ensp;  -f 搜索的文件夹，可以用正则式表示<br>
-&ensp;  -k 搜索文件包含的关键字，可以用正则式表示，没有这个参数则根据n参数搜索匹配的文件名<br>
-&ensp;  -n 文件名，可以用正则式表示，如果为空则视为 .*(匹配任何文件)<br>
-&ensp;  -s 单独列出名字含有关键字的文件和目录<br>
-&ensp;  -i 忽略正则式的大小写<br>
-&ensp;  -e 限制编码方式，没有这个参数默认同时支持GBK和UTF8（先根据GBK查找，然后用UTF8查找），多个编码用'&'连接<br>
+&ensp;  -f &ensp;搜索的文件夹，可以用正则式表示<br>
+&ensp;  -k &ensp;搜索文件包含的关键字，可以用正则式表示，没有这个参数则根据n参数搜索匹配的文件名<br>
+&ensp;  -n &ensp;文件名，可以用正则式表示，如果为空则视为 .*(匹配任何文件)<br>
+&ensp;  -s &ensp;单独列出名字含有关键字的文件和目录<br>
+&ensp;  -i &ensp;忽略正则式的大小写<br>
+&ensp;  -e &ensp;限制编码方式，没有这个参数默认同时支持GBK和UTF8（先根据GBK查找，然后用UTF8查找），多个编码用'&'连接<br>
 <br>
 特殊符号<br>
 <br>
-&ensp;  & 连接多个参数表示存在这些参数中的一个即匹配， 如 -k &haha&hehe 匹配包含 haha 或者包含 hehe 的文件<br>
-&ensp;  | 连接多个参数表示必须存在这些参数， 如 -k |haha|hehe 匹配同时含有haha和hehe的文件，同时出现'&'和'|'，以'|'为准<br>
+&ensp;  & &ensp;连接多个参数表示存在这些参数中的一个即匹配， 如 -k &haha&hehe 匹配包含 haha 或者包含 hehe 的文件<br>
+&ensp;  | &ensp;连接多个参数表示必须存在这些参数， 如 -k |haha|hehe 匹配同时含有haha和hehe的文件，同时出现'&'和'|'，以'|'为准<br>
 &ensp;  ^ 连接多个参数表示不允许存在的参数， 如 -k &haha&hehe^hoho 匹配包含 haha 或者包含 hehe 但不允许出现 hoho 的文件<br>
 <br>
 注意：<br>
@@ -46,8 +46,8 @@ a search file util support different encoding ,such as GBK UTF-8
 注意：<br>
 1.空格只是为了看起来明显，解析时参数可以不用空格隔开。<br>
 2.关键字（-f -n -k 这些参数后面的搜索内容）中出现 % & | ^ - 这些特殊符号要用 %% %& %| %^ %- 来转义表示<br>
-  比如 java -jar MSearcher.jar  -f C:\testFolder -n .*  -k 武汉理工%&大%^学 表示搜索的关键字为 武汉理工&大^学
-  （正在做还没做完）<br>
+&ensp;  比如 java -jar MSearcher.jar  -f C:\testFolder -n .*  -k 武汉理工%&大%^学 表示搜索的关键字为 武汉理工&大^学
+&ensp;  （正在做还没做完）<br>
 3.后续想添加 -c 参数，支持在压缩文件（rar、zip、tar.gz）中搜索压缩的文件<br>
 4.后续想添加 -u 限制文件的修改时间， -l 限制文件的大小<br>
 5.正在做GUI，在没有-f参数的情况下启动gui界面
