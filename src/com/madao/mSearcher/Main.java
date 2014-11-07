@@ -9,12 +9,6 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-//TODO 新的计划，必须有的用|连接好了，开始想用参数，但考虑到 文件名、路径、关键字不能同时用一个--must限制成必须把？所以
-//a&b 表示a或者有b
-//a|b 表示必须有b
-//当然也可以直接 |b|c^d^e ,就是说第一个默认当成 & 如果第一个项为空
-// 比如 |b
-// 就无视第一个.不放到and组里
 
 /**
  * Created by Administrator on 2014/11/5.
@@ -87,7 +81,7 @@ public class Main {
         //get the rules in ConfigFile to filter the file
 
          if(args2.contains("-e")){
-             String  coding = processUtil("-e[^-]*", args2);//TODO
+             String  coding = processUtil("-e[^-]*", args2);
              if(coding!="") {
                  encoding.clear();
                  encoding.addAll(cf.processUtil("^[^&^\\|^\\^]*", coding, false));
