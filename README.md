@@ -47,7 +47,7 @@ a search file util support different encoding ,such as GBK UTF-8
 1.空格只是为了看起来明显，解析时参数可以不用空格隔开。<br>
 2.关键字（-f -n -k 这些参数后面的搜索内容）中出现 % & | ^ - 这些特殊符号要用 %% %& %| %^ %- 来转义表示<br>
 &ensp;  比如 java -jar MSearcher.jar  -f C:\testFolder -n .*  -k 武汉理工%&大%^学 表示搜索的关键字为 武汉理工&大^学
-&ensp;  （正在做还没做完）<br>
+<br>（正在做还没做完）<br>
 3.后续想添加 -c 参数，支持在压缩文件（rar、zip、tar.gz）中搜索压缩的文件<br>
 4.后续想添加 -u 限制文件的修改时间， -l 限制文件的大小<br>
 5.正在做GUI，在没有-f参数的情况下启动gui界面
