@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 /**
  * Created by Administrator on 2014/11/5.
  * 2014-11-6 10:14:13
@@ -31,7 +30,6 @@ import java.util.regex.Pattern;
  * -i ignore case
  * -e limit the encoding
  */
-
 public class Main {
     static ArrayList<String> outputFileList = new ArrayList<String>();//output files to search
     static ArrayList<String> outputFolderList = new ArrayList<String>();//output folders
@@ -39,7 +37,6 @@ public class Main {
     static ArrayList<String> encoding = new ArrayList<String>();//output file name
     static int cast=Pattern.UNICODE_CASE;// case sensitive or not
     static  String keyword="";
-
     static {
     encoding.add("GBK");
     encoding.add("UTF8");
@@ -51,35 +48,30 @@ public class Main {
         for (int i = 0; i < args.length; i++)
             sb.append(args[i]);
         String args2 = sb.toString();
-
         if(!(args2.contains("-f"))){
-
-        //gui
+            //gui
+            System.out.println("gui");
         }
-        else
-        {
-
+        else run(args2);
+    }
+/**
+ * console
+ * */
+    public static void run(String args2) {
         String folder = processUtil("-f[^-]*", args2);
-
             String name;
             if (args2.contains("-n"))
                 name = processUtil("-n[^-]*", args2);
             else
                 name = ".*";
-
-        if (args2.contains("-k"))
-            keyword = processUtil("-k[^-]*", args2);
+        if (args2.contains("-k")) keyword = processUtil("-k[^-]*", args2);
         else
             keyword = "";
-
          if (args2.contains("-i"))  cast=Pattern.CASE_INSENSITIVE;
-
         //process the args
-
         ConfigFile cf = new ConfigFile(name, folder, keyword);
         cf.process();
         //get the rules in ConfigFile to filter the file
-
          if(args2.contains("-e")){
              String  coding = processUtil("-e[^-]*", args2);
              if(coding!="") {
@@ -89,14 +81,14 @@ public class Main {
              }
          }
         Iterator<String> iterator = cf.getPathSplit().getAndItem().iterator();//get folders to search
-
+            //start
         while (iterator.hasNext()) {//search each folder connected with &
             File f;
             f=new File(iterator.next());
             if(f==null)break;
             ergodic(f, cf);
         }
-
+        System.out.println();
         if (outputFileList.size() != 0) {
             System.out.println("the file accord with you require:");
             for (String e : outputFileList) {
@@ -106,7 +98,6 @@ public class Main {
             System.out.println("no file matches");
         }
         System.out.println();
-
         if (args2.contains("-s")) {
             if (outputFolderList.size() != 0) {
                 System.out.println("the directory name which accord with the key word you want");
@@ -120,22 +111,15 @@ public class Main {
                 }
             } else System.out.println("no file name or directory name accord with the key word you want");
         }
-    }
-
 }
-
     /**
      * just a util to analysis args ,please ignore
      * */
     private static String processUtil(String regex,String input){
-
         if(input==null||input=="")return "";
-
         Pattern p = Pattern.compile(regex, cast);
         Matcher m = p.matcher(input);
-
         String temp;
-
         try {
             m.find();
             temp=m.group();
@@ -151,16 +135,15 @@ public class Main {
         }
         return temp;
     }
-
     /**
      * if input contains the content of the regex
      * */
     private static boolean contains(String regex,String input){
+        if(input.contains(regex))return true;
         Pattern p = Pattern.compile(regex, cast);
         Matcher m = p.matcher(input);
         return m.find();
     }
-
     /**
      * Ergodic the specificed folder
      * very important method
@@ -169,7 +152,6 @@ public class Main {
 //param 'file' is a folder
         boolean b;
         Iterator<String> iterator;
-
         if(cf.getPathSplit().getNotItem().size()!=0) {
             iterator = cf.getPathSplit().getNotItem().iterator();
             while (iterator.hasNext()) {
@@ -184,27 +166,17 @@ public class Main {
                 }
             }
         }
-/*
-        if(cf.getPathSplit().getOrItem().size()!=0) {
-            iterator = cf.getPathSplit().getOrItem().iterator();
-            while (iterator.hasNext())
-                if (match(iterator.next(), file.getAbsolutePath()))// or limit in name means filename must be one of this limit
-                    b = true;
-        }
-        else b=true;
-        //judge folder name -f
-        if(!b)return;
-*/
         File[] files = file.listFiles();
 
         if (files != null&&files.length>0) {
             for (File f : files) {
                 if(f.isFile()) {
-                    if (hasKeyWord(f.getName(), cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem(),cf.getKeyWordSplit().getOrItem()))
+                    //f is the child node of one directory
+                    if (hasKeyWord(f.getName(), cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem(),cf.getKeyWordSplit().getOrItem())) {
                         outputFileNameList.add(f.getAbsolutePath());
-
+                        System.out.println("file name:"+f.getAbsolutePath());
+                    }
                     b = false;// name is matcher?
-
                     //'not' is prior than 'and','or' is a reserve word
                     if ( cf.getFileNameSplit().getAndItem().size()!=0) {
                         iterator = cf.getFileNameSplit().getAndItem().iterator();
@@ -216,7 +188,6 @@ public class Main {
                         }
                     }
                     else b=true;
-
                     if (cf.getFileNameSplit().getNotItem().size()!=0) {
                         iterator = cf.getFileNameSplit().getNotItem().iterator();
                         while (iterator.hasNext()) {
@@ -227,35 +198,59 @@ public class Main {
                         }
                     }
                     //judge filename -n
-
-
                     if (b){
                         if (isBinary(f)&&keyword!="") continue;//ignore binary file if the
-
                         try {
+                            //f is a file , not directory
                             b = hasKeyWord(f, cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem(),cf.getKeyWordSplit().getOrItem());
                         } catch (Exception e) {
                             e.printStackTrace();
                             continue;//Unknown Exception?IO Exception?
                         }
-
-                        if (b) outputFileList.add(f.getAbsolutePath());
-
+                        if (b) {
+                            outputFileList.add(f.getAbsolutePath());
+                            System.out.println(f.getAbsolutePath());
+                        }
                     }
                 }
                    else if(f.isDirectory()) {//some maybe neither file nor directory
-                        if (hasKeyWord(f.getName(), cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem(),cf.getKeyWordSplit().getOrItem()))
+                        if (hasKeyWord(f.getName(), cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem(),cf.getKeyWordSplit().getOrItem())) {
                             outputFolderList.add(f.getAbsolutePath());
-                        //if file name match the keyword,also record
+                            System.out.println("directory:"+f.getAbsolutePath());
+                        }
+                    b=false;
+                    if ( cf.getFileNameSplit().getAndItem().size()!=0) {
+                        iterator = cf.getFileNameSplit().getAndItem().iterator();
+                        while (iterator.hasNext()) {
+                            if (match(iterator.next(), f.getName())) {
+                                b = true;
+                                break;//if any matches
+                            }
+                        }
+                    }
+                    if (cf.getFileNameSplit().getNotItem().size()!=0) {
+                        iterator = cf.getFileNameSplit().getNotItem().iterator();
+                        while (iterator.hasNext()) {
+                            if (match(iterator.next(), f.getName())) {
+                                b = false;
+                                break;//if any matches
+                            }
+                        }
+                    }
+                    if (b){
+                        outputFileList.add("<dir>"+f.getAbsolutePath());
+                        System.out.println("<dir>" + f.getAbsolutePath());
+                        }//TODO
+
+                    //if file name match the keyword,also record
                     String[] list=null;
                     int len=0;
                     try {
-
                         list=f.list();
                         len=list.length;
                     }catch (Exception e){
                         System.err.println(f.getPath() + " access denied ......");
-                        e.printStackTrace();
+                        //e.printStackTrace();
                         //case of Access denied
                     }
                         if (len != 0)//ergodic the directory
@@ -264,21 +259,17 @@ public class Main {
                 }
             }
         }
-
-
 /**
  * check the regex
  * @param rule the regex
  * @param input input text
  * */
     private static boolean match(String rule,String input){
+        if(rule.equals(input))return true;
         Pattern p = Pattern.compile(rule,cast);
         Matcher m = p.matcher(input);
-        if(rule.equals(input))return true;
         return m.matches();
     }
-
-
     /**
      * judge the file whether has keyword,support GBK UTF-8
      * @param f the file to search key word
@@ -286,15 +277,12 @@ public class Main {
      * @param ignoreWord if matches any of this word,the file is illegal
      */
     private static boolean hasKeyWord (File f, ArrayList<String> keyword, ArrayList<String> ignoreWord,ArrayList<String> mustWord) throws Exception {
-
         if (ignoreWord.size() == 0&&keyword.size() == 0) return true;
-
         FileInputStream fileInputStream=null;
         InputStreamReader inputStreamReader=null;
         BufferedReader bufferedReader=null;
         String line;
         boolean include=false;
-
         for (String coding : encoding) {
             //test each encoding
             fileInputStream=new FileInputStream(f);
@@ -312,7 +300,6 @@ public class Main {
                         }
                     }
                 }
-
                 //or array
                 if (mustWord.size() != 0) {
                     int[] orArray = new int[mustWord.size()];//calculate times default 0
@@ -322,7 +309,6 @@ public class Main {
                     for (int i=0;i<orArray.length;i++)num*=orArray[i];
                         if (num==0)return false;//lack of any of word must appear
                 }
-
                 //and array
                 if (keyword.size() != 0) {
                     for (String e : keyword) {
@@ -332,7 +318,6 @@ public class Main {
                         }
                     }
                 }
-
             }
             if (include) {
                 bufferedReader.close();
@@ -341,7 +326,6 @@ public class Main {
                 return true;
             }
         }
-
         if (bufferedReader!=null)bufferedReader.close();
         if (fileInputStream!=null)fileInputStream.close();
         if (inputStreamReader!=null)inputStreamReader.close();
@@ -349,14 +333,16 @@ public class Main {
     }
     /**
      * judge the folder name whether has keyword
+     *
+     * use:
+     * judge directory name by keyword
+     *
      * @param f the folder name
      * @param keyword keyword to search
      * @param ignoreWord if matches any of this word,the file is illegal
      */
     private static boolean hasKeyWord (String f, ArrayList<String> keyword, ArrayList<String> ignoreWord,ArrayList<String> mustWord){
-
-        if (ignoreWord.size() == 0&&keyword.size() == 0) return true;
-
+        if (ignoreWord.size() == 0&&keyword.size() == 0&&mustWord.size() == 0) return false;
             if(ignoreWord.size()!=0) {
                 for (String e : ignoreWord) {
                     if (contains(e, f)) {
@@ -364,7 +350,13 @@ public class Main {
                     }
                 }
             }
-
+        if(mustWord.size()!=0) {
+            for (String e : mustWord) {
+                if (!contains(e, f)) {
+                    return false;//if don't have any of the keyword must appear
+                }
+            }
+        }
             if(keyword.size()!=0) {
                 for (String e : keyword) {
                     if (contains(e, f)) {//match any key word
@@ -372,7 +364,6 @@ public class Main {
                     }
                 }
             }
-
         return false;
     }
     /**
@@ -395,6 +386,4 @@ public class Main {
         }
         return isBinary;
     }
-
 }
-

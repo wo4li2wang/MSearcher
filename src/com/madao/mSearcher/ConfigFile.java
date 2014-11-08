@@ -50,7 +50,7 @@ public class ConfigFile {
             String temp2=m.group();
             if(b)
                 temp2 = temp2.substring(1);
-            if(temp2.length()>1)
+            if(temp2.length()>0)
                 temp.add(temp2);
         }
         return temp;
