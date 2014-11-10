@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -32,11 +34,13 @@ import java.util.regex.Pattern;
  */
 public class Main {
     static ArrayList<String> outputFileList = new ArrayList<String>();//output files to search
-    static ArrayList<String> outputFolderList = new ArrayList<String>();//output folders
-    static ArrayList<String> outputFileNameList = new ArrayList<String>();//output file name
+    static ArrayList<String> outputFolderList = null;//output folders
+    static ArrayList<String> outputFileNameList = null;//output file name
     static ArrayList<String> encoding = new ArrayList<String>();//output file name
     static int cast=Pattern.UNICODE_CASE;// case sensitive or not
     static  String keyword="";
+    static ListShow listShow;
+
     static {
     encoding.add("GBK");
     encoding.add("UTF8");
@@ -50,7 +54,8 @@ public class Main {
         String args2 = sb.toString();
         if(!(args2.contains("-f"))){
             //gui
-            System.out.println("gui");
+            new Gui("MSearcher");
+
         }
         else run(args2);
     }
@@ -58,6 +63,10 @@ public class Main {
  * console
  * */
     public static void run(String args2) {
+        if (args2.contains("-s")) {
+            outputFileNameList=new ArrayList<String>();
+            outputFolderList=new ArrayList<String>();
+        }
         String folder = processUtil("-f[^-]*", args2);
             String name;
             if (args2.contains("-n"))
@@ -172,8 +181,10 @@ public class Main {
             for (File f : files) {
                 if(f.isFile()) {
                     //f is the child node of one directory
-                    if (hasKeyWord(f.getName(), cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem(),cf.getKeyWordSplit().getOrItem())) {
+                    if (outputFileNameList!=null&&hasKeyWord(f.getName(), cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem(), cf.getKeyWordSplit().getOrItem())) {
                         outputFileNameList.add(f.getAbsolutePath());
+                        if(listShow!=null)
+                            listShow.addElement(new Object[]{f.getName(),f.getAbsolutePath(),f.length(), DateFormat.getDateInstance().format(new Date(f.lastModified())).toString(),"文件名"});
                         System.out.println("file name:"+f.getAbsolutePath());
                     }
                     b = false;// name is matcher?
@@ -209,13 +220,17 @@ public class Main {
                         }
                         if (b) {
                             outputFileList.add(f.getAbsolutePath());
+                            if(listShow!=null)
+                                listShow.addElement(new Object[]{f.getName(),f.getAbsolutePath(),f.length(),DateFormat.getDateInstance().format(new Date(f.lastModified())).toString(),"文件内容"});
                             System.out.println(f.getAbsolutePath());
                         }
                     }
                 }
                    else if(f.isDirectory()) {//some maybe neither file nor directory
-                        if (hasKeyWord(f.getName(), cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem(),cf.getKeyWordSplit().getOrItem())) {
+                        if (outputFolderList!=null&&hasKeyWord(f.getName(), cf.getKeyWordSplit().getAndItem(), cf.getKeyWordSplit().getNotItem(), cf.getKeyWordSplit().getOrItem())) {
                             outputFolderList.add(f.getAbsolutePath());
+                            if(listShow!=null)
+                                listShow.addElement(new Object[]{f.getName(),f.getAbsolutePath(),"-",DateFormat.getDateInstance().format(new Date(f.lastModified())).toString(),"目录名"});
                             System.out.println("directory:"+f.getAbsolutePath());
                         }
                     b=false;
@@ -240,7 +255,7 @@ public class Main {
                     if (b){
                         outputFileList.add("<dir>"+f.getAbsolutePath());
                         System.out.println("<dir>" + f.getAbsolutePath());
-                        }//TODO
+                        }
 
                     //if file name match the keyword,also record
                     String[] list=null;
@@ -250,8 +265,6 @@ public class Main {
                         len=list.length;
                     }catch (Exception e){
                         System.err.println(f.getPath() + " access denied ......");
-                        //e.printStackTrace();
-                        //case of Access denied
                     }
                         if (len != 0)//ergodic the directory
                             ergodic(f, cf);
