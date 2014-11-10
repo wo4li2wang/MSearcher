@@ -5,7 +5,9 @@ a search file util support different encoding ,such as GBK UTF-8
 <br><br>
 文件、目录搜索的小工具，开始是专门为了搜索GBK和UTF8两种编码的文件，现在可以制定多种编码方式来搜索文件<br><br>
 本科生，代码可能很不规范<br><br>
-因为windows下好像没有grep，win7默认的搜索用起来也不习惯，search my file也不支持搜索中文，所以开始试着按自己想法尝试写这个东西用来搜源码文件。<br><br>
+因为windows下好像没有grep，win7默认的搜索用起来也不习惯，search my file也不支持搜索中文，所以开始试着按自己想法尝试写这个东西用来搜源码文件。<br>
+做了个很粗陋的GUI，在缺少-f参数时会启动图形界面
+<br><br>
 <br>
 参数<br>
 <br>
